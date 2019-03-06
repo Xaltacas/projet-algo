@@ -6,11 +6,11 @@
 
 Tas initialiser(int taillemax){
 	Tas nouveau;
-	
+
 	nouveau.pile = (Arete*)malloc((taillemax+1) * sizeof(Arete));
 	nouveau.pile[0].l = 0;
 	nouveau.indices = (int*)malloc((taillemax+1) * sizeof(int));
-	
+
 	for(int i = 0 ; i < taillemax + 1; i++)
 		nouveau.indices[i] = 0;
 	return nouveau;
@@ -38,7 +38,7 @@ void inverser(Tas* K,int i,int j){
 	K -> indices[tab[j].s2] = i;
 
 	tab[i] = tab[j];
-	
+
 	tab[j] = temp;
 
 }
@@ -70,7 +70,7 @@ int pere(Tas K, int i){
 void ajouter(Tas* K, int s1, int s2, int l){
 
 	Arete* pilt = K -> pile;
-	
+
 	pilt[0].l++;
 	int indice = pilt[0].l;
 
@@ -89,18 +89,18 @@ void ajouter(Tas* K, int s1, int s2, int l){
 void supprime(Tas* K, int s2){
 
 	Arete* pilt = K -> pile;
-	
+
 	int indice = K -> indices[s2];
-	
+
 	//K -> indices[s2] = -1;
 
 	inverser(K,pilt[0].l,indice);
-	
+
 	pilt[0].l--;
 
 	int finis = 0;
 	int gauche, droite;
-	
+
 	while( !finis){
 		gauche = fgauche(*K,indice);
 		droite = fdroite(*K,indice);
@@ -110,7 +110,7 @@ void supprime(Tas* K, int s2){
 		}
 		else if(!droite){
 			if(pilt[indice].l <= pilt[gauche].l){
-				finis =1;	
+				finis =1;
 			}
 			else{
 				inverser(K,indice,gauche);
@@ -119,7 +119,7 @@ void supprime(Tas* K, int s2){
 		}
 		else{
 			int min = pilt[gauche].l > pilt[droite].l ? droite : gauche;
-			
+
 			if(pilt[indice].l <= pilt[min].l)
 				finis =1;
 			else{
@@ -136,7 +136,7 @@ int recupMin(Tas* K){
 	if(est_vide(*K))
 		return 0;
 	else{
-		
+
 		int res = K -> pile[1].s2;
 		supprime(K,res);
 		return res;
@@ -147,18 +147,18 @@ int recupMin(Tas* K){
 void interclassement(Arete* Tab,int start,int mid,int end){
 	int x = start;
 	int y = mid;
-	
+
 	int taille = end - start +1;
 
 	Arete* res;
 
 	//printf("%ld\t",sizeof(Arete));
-	
-	
+
+
 	res = (Arete*)malloc(taille * sizeof(Arete));
 	if(res == NULL)
 		printf("fail\n");
-	
+
 
 
 	for(int i = 0; i < taille; i++){
@@ -176,7 +176,7 @@ void interclassement(Arete* Tab,int start,int mid,int end){
 		Tab[start + i] = res[i];
 	}
 	free(res);
-}	
+}
 
 void fusion_para(Arete* Tab,int start, int end){
 	int n = end - start +1;

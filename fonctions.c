@@ -31,7 +31,7 @@ Graphe creer_graphe(int n)
         g->alist[i]->nbcell = 1;
         g->alist[i]->est_trie= 1;
     }
-    
+
     return g;
 }
 
@@ -57,7 +57,7 @@ void graphe_ajouter_arete(Graphe g, int s1, int s2)
     while(g->alist[s1]->d >= g->alist[s1]->nbcell) {
         g->alist[s1]->nbcell *= 2;
         g->alist[s1] =
-            realloc(g->alist[s1], 
+            realloc(g->alist[s1],
                 sizeof(struct voisins) + sizeof(int) * (g->alist[s1]->nbcell - 1));
     }
 
@@ -65,7 +65,7 @@ void graphe_ajouter_arete(Graphe g, int s1, int s2)
     while(g->alist[s2]->d >= g->alist[s2]->nbcell) {
         g->alist[s2]->nbcell *= 2;
         g->alist[s2] =
-            realloc(g->alist[s2], 
+            realloc(g->alist[s2],
                 sizeof(struct voisins) + sizeof(int) * (g->alist[s2]->nbcell - 1));
     }
 
@@ -93,7 +93,7 @@ void graphe_retirer_arete(Graphe g, int s1,int s2){
 		}
 		i++;
 	}
-	
+
 	i = 0;
 	finis = 0;
 	while( !finis && i < g -> alist[s2] -> d){
@@ -152,9 +152,9 @@ int graphe_arete_existe(Graphe g, int s1, int s2)
         if(! g->alist[s1]->est_trie) {
             qsort(g->alist[s1]->list,g->alist[s1]->d,sizeof(int),intcmp);
         }
-        
+
         /* on appelle la recherche dichotomique */
-        return 
+        return
             bsearch(&s2,g->alist[s1]->list,g->alist[s1]->d,sizeof(int),intcmp)!= 0;
     } else {
         /* on realise une simple recherche sequentielle */
@@ -171,11 +171,11 @@ Graphe conversion_tour_graphe(char *nom_tour)
 {
 	FILE* fichier_tour = NULL;
 	char temp[256];
-	int i,j,dimension,sommet1,sommet2;	
+	int i,j,dimension,sommet1,sommet2;
 	Graphe g;
 
-	char nom_complet_tour[256];	
-	
+	char nom_complet_tour[256];
+
 	/* ouverture en lecture du fichier nom_tour.tour */
 	/* exemple : berlin52.opt.tour */
 	sprintf(nom_complet_tour,"%s.tour",nom_tour);
@@ -183,12 +183,12 @@ Graphe conversion_tour_graphe(char *nom_tour)
 
 	/* on recupere la dimension dans nom_tour.tour */
 	/* exemple : on recupere la dimension dans berlin52.opt.tour */
-	do	
+	do
 	{
-		fgets(temp,256,fichier_tour);	
+		fgets(temp,256,fichier_tour);
 	} while (temp[0] != 'D');
-	
-	i=0;		
+
+	i=0;
 	while (temp[i] != ':') i++;
 	i=i+2;
 	char dim[256];
@@ -207,7 +207,7 @@ Graphe conversion_tour_graphe(char *nom_tour)
 	/* on se place sur la ligne comportant le sommet 1 dans nom_tour.tour */
 	/* exemple : ligne comportant le sommet 1 dans berlin52.opt.tour */
 	fgets(temp,256,fichier_tour);
-	while(temp[0] != '1') 
+	while(temp[0] != '1')
 	{
 		fgets(temp,256,fichier_tour);
 	}
@@ -215,17 +215,17 @@ Graphe conversion_tour_graphe(char *nom_tour)
 	/* on parcourt le fichier nom_tour.tour pour generer le graphe g */
 	/* exemple : on parcourt berlin52.opt.tour pour generer le graphe g */
 	sommet1=1;
-	fscanf(fichier_tour,"%d",&sommet2);	
-	while (sommet2 != -1)	
+	fscanf(fichier_tour,"%d",&sommet2);
+	while (sommet2 != -1)
 	{
-		graphe_ajouter_arete(g,sommet1-1,sommet2-1);		
+		graphe_ajouter_arete(g,sommet1-1,sommet2-1);
 		sommet1=sommet2;
-		fscanf(fichier_tour,"%d",&sommet2);	
+		fscanf(fichier_tour,"%d",&sommet2);
 	}
 
 	/* on genere la derniere arete de la tournee */
 	graphe_ajouter_arete(g,sommet1-1,0);
-	
+
 	/* fermeture du fichier nom_tour.tour */
 	fclose(fichier_tour);
 
@@ -244,7 +244,7 @@ Coordonnees creer_coordonnees(int n,char *nom)
 
     c->n = n;
     sprintf(c->nom,"%s",nom);
-    
+
     for(i = 0; i < n; i++) {
         c->clist[i] = malloc(sizeof(struct coord));
         assert(c->clist[i]);
@@ -252,7 +252,7 @@ Coordonnees creer_coordonnees(int n,char *nom)
         c->clist[i]->coordx = 0;
         c->clist[i]->coordy = 0;
     }
-    
+
     return c;
 }
 
@@ -281,22 +281,22 @@ Coordonnees lecture_instance(char* nom)
 	/* ouverture en lecture du fichier nom.tsp */
 	/* exemple : berlin52.tsp */
 	char nom_tsp[256];
-       	sprintf(nom_tsp,"%s.tsp",nom); 
+       	sprintf(nom_tsp,"%s.tsp",nom);
 	fichier_tsp = fopen(nom_tsp, "r");
 
 	/* ouverture en ecriture du fichier nom.dat */
 	/* le fichier stocke les differents points */
 	/* sous un format interpretable par gnuplot */
-	/* exemple : berlin52.dat */	
+	/* exemple : berlin52.dat */
 	char nom_dat[256];
-	sprintf(nom_dat,"%s.dat",nom); 
+	sprintf(nom_dat,"%s.dat",nom);
 	fichier_dat = fopen(nom_dat, "w");
-	
+
 	/* ouverture en ecriture du fichier nom.gnu */
 	/* le fichier nom.gnu fait appel a nom.dat */
-	/* exemple : berlin52.gnu */	
+	/* exemple : berlin52.gnu */
 	char nom_gnu[256];
-	sprintf(nom_gnu,"%s.gnu",nom); 
+	sprintf(nom_gnu,"%s.gnu",nom);
 	fichier_gnu = fopen(nom_gnu, "w");
 
 	if ((fichier_tsp != NULL)&&(fichier_dat != NULL)&&(fichier_gnu != NULL))
@@ -305,7 +305,7 @@ Coordonnees lecture_instance(char* nom)
 		/* exemple : on recupere la dimension dans berlin52.tsp */
 		for (i=0;i<3;i++) fgets(temp,256,fichier_tsp);
 		fgets(temp,256,fichier_tsp);
-		i=0;		
+		i=0;
 		while (temp[i] != ':') i++;
 		i=i+2;
 		char dim[256];
@@ -326,14 +326,14 @@ Coordonnees lecture_instance(char* nom)
 		for (i=0;i<2;i++) fgets(temp,256,fichier_tsp);
 		for (i=0;i<c->n;i++)
 		{
-			fscanf(fichier_tsp,"%d %f %f",&point,&coordx,&coordy);	
+			fscanf(fichier_tsp,"%d %f %f",&point,&coordx,&coordy);
 			c->clist[point-1]->coordx = coordx;
-			c->clist[point-1]->coordy = coordy;		
+			c->clist[point-1]->coordy = coordy;
 			fprintf(fichier_dat,"%d %f %f \n",point,coordx,coordy);
 		}
-	}	
-    	else	
-	{	
+	}
+    	else
+	{
 	        /* On affiche un message d'erreur */
 	        printf("Impossible d'ouvrir le fichier");
 	}
@@ -356,7 +356,7 @@ Coordonnees lecture_instance(char* nom)
 	fclose(fichier_tsp);
 	fclose(fichier_dat);
 	fclose(fichier_gnu);
-		
+
 	/* retourne les coordonnees */
 	return c;
 }
@@ -367,7 +367,7 @@ void afficher_instance(char* nom)
 {
 	char commande[256];
        	sprintf(commande,"gnuplot %s.gnu",nom);
-	system(commande);	 
+	system(commande);
 }
 
 /* affiche une tournee nom_tour.tour */
@@ -376,14 +376,14 @@ void afficher_instance(char* nom)
 void afficher_tour(Coordonnees c, char* nom_tour)
 {
 	FILE* fichier_gnu = NULL;
-	FILE* fichier_tour_gnu = NULL;	
+	FILE* fichier_tour_gnu = NULL;
 	FILE* fichier_tour = NULL;
-	int sommet1,sommet2;	
+	int sommet1,sommet2;
 
 	char nom_gnu[256];
-	char nom_tour_gnu[256];	
-	char nom_complet_tour[256];	
-	
+	char nom_tour_gnu[256];
+	char nom_complet_tour[256];
+
 	/* ouverture en lecture du fichier (c->nom).gnu */
 	/* exemple : berlin52.gnu */
 	sprintf(nom_gnu,"%s.gnu",c->nom);
@@ -401,34 +401,34 @@ void afficher_tour(Coordonnees c, char* nom_tour)
 
 	/* on se place sur la ligne comportant le sommet 1 dans nom_tour.tour */
 	/* exemple : ligne comportant le sommet 1 dans berlin52.opt.tour */
-	char temp[256];	
+	char temp[256];
 	fgets(temp,256,fichier_tour);
-	while(temp[0] != '1') 
+	while(temp[0] != '1')
 	{
 		fgets(temp,256,fichier_tour);
 	}
 
-	/* on copie la premiere ligne de nom.gnu dans nom_tour.gnu */	
+	/* on copie la premiere ligne de nom.gnu dans nom_tour.gnu */
 	/* exemple : on copie de berlin52.gnu vers berlin52.opt.gnu */
-	char ligne[256];	
-	fgets(ligne,sizeof(ligne),fichier_gnu);       
+	char ligne[256];
+	fgets(ligne,sizeof(ligne),fichier_gnu);
 	fprintf(fichier_tour_gnu,"%s",ligne);
-	
+
 	/* on parcourt le fichier nom_tour.tour pour generer nom_tour.gnu */
 	/* exemple : on parcourt berlin52.opt.tour pour generer berlin52.opt.gnu */
 	sommet1=1;
-	fscanf(fichier_tour,"%d",&sommet2);	
-	while (sommet2 != -1)	
+	fscanf(fichier_tour,"%d",&sommet2);
+	while (sommet2 != -1)
 	{
 		fprintf(fichier_tour_gnu,"set arrow from %f,%f to %f,%f nohead\n",c->clist[sommet1-1]->coordx,c->clist[sommet1-1]->coordy,c->clist[sommet2-1]->coordx,c->clist[sommet2-1]->coordy);
 		sommet1=sommet2;
-		fscanf(fichier_tour,"%d",&sommet2);	
+		fscanf(fichier_tour,"%d",&sommet2);
 	}
 
 	/* on genere les dernieres lignes de nom_tour.gnu */
 	/* exemple : on genere les dernieres lignes de berlin52.opt.gnu */
 	fprintf(fichier_tour_gnu,"set arrow from %f,%f to %f,%f nohead\n",c->clist[sommet1-1]->coordx,c->clist[sommet1-1]->coordy,c->clist[0]->coordx,c->clist[0]->coordy);
-	fprintf(fichier_tour_gnu,"%s","replot\n");	
+	fprintf(fichier_tour_gnu,"%s","replot\n");
 	fprintf(fichier_tour_gnu,"%s","pause -1\n");
 
 	/* fermeture des differents fichiers */
@@ -437,7 +437,7 @@ void afficher_tour(Coordonnees c, char* nom_tour)
 	fclose(fichier_tour);
 
 	/* affichage obtenu par 'gnuplot nom_tour.gnu' */
-	/* exemple : affichage obtenu par 'gnuplot berlin52.opt.gnu' */ 
+	/* exemple : affichage obtenu par 'gnuplot berlin52.opt.gnu' */
 	char commande[256];
 	sprintf(commande,"gnuplot %s.gnu",nom_tour);
 	system(commande);
@@ -447,29 +447,29 @@ void afficher_tour(Coordonnees c, char* nom_tour)
 /* prerequis : avoir lance lecture_instance au prealable */
 void afficher_graphe(Coordonnees c, Graphe g)
 {
-	FILE* fichier_gnu = NULL;	
+	FILE* fichier_gnu = NULL;
 	FILE* fichier_graphe_gnu = NULL;
-	int i,sommet1,sommet2;	
+	int i,sommet1,sommet2;
 	char nom_gnu[256];
-	
+
 	/* ouverture en lecture de nom.gnu */
 	/* exemple : berlin52.gnu */
 	/* ouverture en ecriture de "graphe.gnu" */
 	sprintf(nom_gnu,"%s.gnu",c->nom);
-	fichier_gnu = fopen(nom_gnu, "r");	
+	fichier_gnu = fopen(nom_gnu, "r");
 	fichier_graphe_gnu = fopen("graphe.gnu", "w");
-	
+
 	/* generation de "graphe.gnu" a partir de nom.gnu et de g */
-	char ligne[256];	
-	fgets(ligne,sizeof(ligne),fichier_gnu);       
+	char ligne[256];
+	fgets(ligne,sizeof(ligne),fichier_gnu);
 	fprintf(fichier_graphe_gnu,"%s",ligne);
 	for(sommet1 = 0; sommet1 < g->n; sommet1++) {
 		for (i = 0; i < g->alist[sommet1]->d; i++) {
 			sommet2 = g->alist[sommet1]->list[i];
-			if (sommet2 > sommet1) fprintf(fichier_graphe_gnu,"set arrow from %f,%f to %f,%f nohead\n",c->clist[sommet1]->coordx,c->clist[sommet1]->coordy,c->clist[sommet2]->coordx,c->clist[sommet2]->coordy);		
+			if (sommet2 > sommet1) fprintf(fichier_graphe_gnu,"set arrow from %f,%f to %f,%f nohead\n",c->clist[sommet1]->coordx,c->clist[sommet1]->coordy,c->clist[sommet2]->coordx,c->clist[sommet2]->coordy);
 		}
 	}
-	fprintf(fichier_graphe_gnu,"%s","replot\n");	
+	fprintf(fichier_graphe_gnu,"%s","replot\n");
 	fprintf(fichier_graphe_gnu,"%s","pause -1\n");
 
 	/*fermeture des differents fichiers */
@@ -485,21 +485,21 @@ void prim(Coordonnees c, Graphe g){
 	Tas tare = initialiser((c -> n) + 1);
 
 	tare.indices[0] = -1;
-	
+
 	//printf("etape 1 check\n %d\n", c ->n);
 
 	for(int i = 1; i < c -> n ; i++){
 		//printf("%d   ",i);
 		//printf("%d\n",distance(0,i,c));
-		ajouter(&tare,0,i,distance(0,i,c));	
+		ajouter(&tare,0,i,distance(0,i,c));
 	}
 
 	//printf("etape 2 check\n");
 	//int j = 0;
-		
+
 	//printf("restant %d\n",tare.pile[0].l);
-	
-	
+
+
 	//while(!est_vide(tare)){
 	while(tare.pile[0].l > 0){
 		//j++;
@@ -507,11 +507,11 @@ void prim(Coordonnees c, Graphe g){
 
 		int s1 = tare.pile[1].s1;
 		int s2 = tare.pile[1].s2;
-		
+
 		graphe_ajouter_arete(g,s1,s2);
 		recupMin(&tare);
 		tare.indices[s2] = -1;
-		
+
 		//printf("restant %d\n",tare.pile[0].l);
 		for(int i = 1; i < c -> n; i++){
 			int dist = distance(s2,i,c);
@@ -526,41 +526,41 @@ void prim(Coordonnees c, Graphe g){
 }
 
 int distance(int s1, int s2, Coordonnees c){
-	
+
 	return floor( sqrt(pow(c -> clist[s1] -> coordx - c-> clist[s2] -> coordx,2) +
 			   pow(c -> clist[s1] -> coordy - c-> clist[s2] -> coordy,2)));
 
 }
 
 void arbre1(Coordonnees c, Graphe g){
-	
+
 	Tas tare = initialiser((c -> n) + 1);
 
 	tare.indices[0] = -1;
 	tare.indices[1] = -1;
-	
+
 	for(int i = 2; i < c -> n ; i++)
-		ajouter(&tare,1,i,distance(1,i,c));	
-	
+		ajouter(&tare,1,i,distance(1,i,c));
+
 	while(tare.pile[0].l > 0){
 
 		int s1 = tare.pile[1].s1;
 		int s2 = tare.pile[1].s2;
-		
+
 		graphe_ajouter_arete(g,s1,s2);
 		recupMin(&tare);
 		tare.indices[s2] = -1;
-		
+
 		for(int i = 1; i < c -> n; i++){
 			int dist = distance(s2,i,c);
 			if((tare.indices[i] != -1) && (dist < tare.pile[tare.indices[i]].l) ){
 				supprime(&tare, i);
 				ajouter(&tare, s2, i, dist);
-				
+
 			}
 		}
 	}
-	
+
 	int d1 = distance(0,1,c);
 	int d2 = distance(0,2,c);
 
@@ -578,7 +578,7 @@ void arbre1(Coordonnees c, Graphe g){
 	}
 
 	for(int i = 3; i < c -> n ; i++){
-		
+
 		int dist = distance(0,i,c);
 		if(dist < d1){
 			d2 = d1;
@@ -602,20 +602,20 @@ int primPoids(Coordonnees c, Graphe g,float* poids){
 
 	tare.indices[0] = -1;
 	tare.indices[1] = -1;
-	
+
 	for(int i = 2; i < c -> n ; i++)
-		ajouter(&tare,1,i,distance(1,i,c)+ poids[1] + poids[i]);	
-	
+		ajouter(&tare,1,i,distance(1,i,c)+ poids[1] + poids[i]);
+
 	while(tare.pile[0].l > 0){
 
 		int s1 = tare.pile[1].s1;
 		int s2 = tare.pile[1].s2;
-		
+
 		graphe_ajouter_arete(g,s1,s2);
 		res += distance(s1,s2,c) + poids[s1] + poids[s2];
 		recupMin(&tare);
 		tare.indices[s2] = -1;
-		
+
 		for(int i = 1; i < c -> n; i++){
 			int prio = distance(s2,i,c) + poids[s2] + poids[i];
 			if((tare.indices[i] != -1) && (prio < tare.pile[tare.indices[i]].l) ){
@@ -642,7 +642,7 @@ int primPoids(Coordonnees c, Graphe g,float* poids){
 	}
 
 	for(int i = 3; i < c -> n ; i++){
-		
+
 		int dist = distance(0,i,c);
 		if(dist < d1){
 			d2 = d1;
@@ -667,7 +667,7 @@ int primPoids(Coordonnees c, Graphe g,float* poids){
 }
 
 int borneMin(Coordonnees c, Graphe g,float UB){
-	
+
 	float poids[c -> n];
 
 	for(int i = 0; i < c ->n; i++)
@@ -681,7 +681,7 @@ int borneMin(Coordonnees c, Graphe g,float UB){
 	int bInf;
 	int sommep;
 	int sommed;
-	
+
 	while(iter > 1){
 		//printf("etpae : %d\n",i);
 		i++;
@@ -690,9 +690,9 @@ int borneMin(Coordonnees c, Graphe g,float UB){
 			Graphe temp = creer_graphe(c -> n);
 
 			bInf = primPoids(c,temp,poids);
-				
+
 			//printf("etape int = %d\t   bInf = %d\n",j,bInf);
-			
+
 			//printf("ca passe\n");
 
 			sommep = 0;
@@ -704,14 +704,14 @@ int borneMin(Coordonnees c, Graphe g,float UB){
 			sommed = 0;
 			for(int n = 0; n < c->n; n++)
 				sommed += pow(graphe_degre(temp,n) - 2,2);
-			
+
 			//printf("ca passe\n");
 			float ti = ((lambda * (UB - bInf)) + sommep) / sommed;
 
 			//printf("ca passe\n");
 			for(int n = 0; n < c->n; n++)
 				poids[n] += ti * (graphe_degre(temp,n)-2);
-			
+
 			detruire_graphe(temp);
 
 			//printf("ca passe\n");
@@ -721,12 +721,12 @@ int borneMin(Coordonnees c, Graphe g,float UB){
 		lambda /= 2;
 	}
 
-	
+
 	return primPoids(c,g,poids);
 }
 
 int UFGetRoot(int* tab,int s){
-	
+
 	int last = s;
 	int curr = tab[s];
 
@@ -738,7 +738,7 @@ int UFGetRoot(int* tab,int s){
 }
 
 int UFIsConnected(int* tab, int s1, int s2){
-	
+
 	return UFGetRoot(tab,s1) == UFGetRoot(tab,s2);
 }
 
@@ -776,14 +776,14 @@ int cycle(Coordonnees c, Graphe g){
 			k++;
 		}
 	}
-	printf("créations aretes?\n");	
+	printf("créations aretes?\n");
 	if(nb > 150)
 		fusion_para(aretes,0,nbtot);
 	else
 		tri_selec(aretes,nbtot);
-	
+
 	printf("fusion?\n");
-	
+
 	int compt=nb-1;
 	int iter=0;
 	while(compt > 0){
@@ -795,9 +795,9 @@ int cycle(Coordonnees c, Graphe g){
 		int s2 = aretes[iter].s2;
 		//printf("iter = %d\n",iter);
 
-		if( (g -> alist[s1] -> d) < 2 
+		if( (g -> alist[s1] -> d) < 2
 		&&  (g -> alist[s2] -> d) < 2
-		&& !UFIsConnected(unionF,s1,s2)){	
+		&& !UFIsConnected(unionF,s1,s2)){
 			//printf("if?\n");
 			graphe_ajouter_arete(g,s1,s2);
 			res += distance(s1,s2,c);
@@ -905,7 +905,7 @@ int opt2bis(Graphe g, Coordonnees c){
 			temp = s4;
 			s4 = arete_suivante(g, s3, s4);
 			s3=temp;
-		
+
 		}
 		temp = s2;
 		s2 = arete_suivante(g, s1, s2);
@@ -927,7 +927,7 @@ int intersection2(int a, int b, int x, int y, Coordonnees c){
 	double sx = c -> clist[y] -> coordx - qx;
 	double sy = c -> clist[y] -> coordy - qy;
 
-	double rTs = prodSca(rx,ry,sx,sy); 
+	double rTs = prodSca(rx,ry,sx,sy);
 	if(rTs == 0)
 		return 0;
 
@@ -941,7 +941,7 @@ int intersection2(int a, int b, int x, int y, Coordonnees c){
 }
 
 double prodSca(double ux, double uy, double vx, double vy){
-	
+
 	return ( ux * vy ) - ( uy * vx);
 }
 
@@ -962,14 +962,14 @@ int lissage(Graphe g, Coordonnees c){
 		while(s5 != 0){
 			if(distance(s1,s2,c) + distance(s3,s4,c) + distance(s4,s5,c)
 			 > distance(s1,s4,c) + distance(s4,s2,c) + distance(s3,s5,c)){
-				
+
 				graphe_retirer_arete(g ,s1 ,s2);
 				graphe_retirer_arete(g ,s3 ,s4);
 				graphe_retirer_arete(g ,s4 ,s5);
 				graphe_ajouter_arete(g ,s1 ,s4);
 				graphe_ajouter_arete(g ,s4 ,s2);
 				graphe_ajouter_arete(g ,s3 ,s5);
-				
+
 				printf("%d %d %d %d %d \n",s1,s2,s3,s4,s5);
 				res = 1;
 				s2 = s4;
@@ -982,7 +982,7 @@ int lissage(Graphe g, Coordonnees c){
 			s5 = arete_suivante(g, s4, s5);
 			s4 = temp;
 			s3 = arete_suivante(g, s5, s4);
-		
+
 		}
 		temp = s2;
 		s2 = arete_suivante(g, s1, s2);

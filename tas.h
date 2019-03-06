@@ -13,7 +13,6 @@ typedef struct tas{
 
 }Tas;
 
-
 Tas initialiser(int taillemax);
 
 double log2(double x);
@@ -47,4 +46,3 @@ void interclassement(Arete* Tab, int start, int mid, int end);
 void fusion_para(Arete* Tab, int start, int end);
 
 void tri_selec(Arete* tab, int taille);
-
