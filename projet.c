@@ -63,22 +63,24 @@ int main(int argc, char *argv[])
 	*/
 	//arbre1(c,g);
 
-	printf("borne min = %d\n",borneMin(c,g,7542));
-
-  
 
 
-/*
+	//printf("borne min = %d\n",borneMin(c,g,7542));
+
+
 
 	printf("longueur = %d\n",cycle(c,g));
 
+	afficher_graphe(c,g);
 
 	int compt =0;
 	while(opt2bis(g,c) && compt < 100) compt++;
 
 	printf("2-opt: %d\n",compt);
+	printf("longueur = %d\n",longueur_cycle(g,c));
 
 	afficher_graphe(c,g);
+
 
 	compt =0;
 	while(lissage(g,c) && compt < 100) compt++;
@@ -86,20 +88,22 @@ int main(int argc, char *argv[])
 	printf("lissage : %d\n",compt);
 
 
-*/
+	printf("longueur = %d\n",longueur_cycle(g,c));
+
 
 
 
 
 	/*
+
 	float poids[ c-> n];
 
 	for(int i = 0; i < c ->n ; i++)
 		poids[i] = 0;
 
-	printf("dist min = %d\n",primPoidsNoG(c,poids));
-	*/
+	printf("dist min = %d\n",primPoids(c,g,poids));
 
+	*/
 
 	afficher_graphe(c,g);
 	// conversion d'un fichier tour en un graphe

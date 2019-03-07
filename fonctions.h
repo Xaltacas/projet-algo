@@ -122,3 +122,5 @@ int intersection2(int a, int b, int x, int y, Coordonnees c);
 double prodSca(double ux, double uy, double vx, double vy);
 
 int lissage(Graphe g, Coordonnees c);
+
+int longueur_cycle(Graphe g, Coordonnees c);

@@ -613,6 +613,8 @@ int primPoids(Coordonnees c, Graphe g,float* poids){
 
 		graphe_ajouter_arete(g,s1,s2);
 		res += distance(s1,s2,c) + poids[s1] + poids[s2];
+            //printf("%d   ",res);
+            //printf("%f %f\t",poids[s1],poids[s2]);
 		recupMin(&tare);
 		tare.indices[s2] = -1;
 
@@ -662,8 +664,10 @@ int primPoids(Coordonnees c, Graphe g,float* poids){
 	int sommep = 0;
 	for(int i = 0; i < c -> n; i++)
 		sommep += poids[i];
+      //printf("\n");
 
 	return res - (2*sommep);
+
 }
 
 int borneMin(Coordonnees c, Graphe g,float UB){
@@ -691,7 +695,7 @@ int borneMin(Coordonnees c, Graphe g,float UB){
 
 			bInf = primPoids(c,temp,poids);
 
-			//printf("etape int = %d\t   bInf = %d\n",j,bInf);
+			printf("etape int = %d\t   bInf = %d\n",j,bInf);
 
 			//printf("ca passe\n");
 
@@ -706,11 +710,13 @@ int borneMin(Coordonnees c, Graphe g,float UB){
 				sommed += pow(graphe_degre(temp,n) - 2,2);
 
 			//printf("ca passe\n");
-			float ti = ((lambda * (UB - bInf)) + sommep) / sommed;
+			float ti = (lambda * (UB - bInf + sommep)) / sommed;
 
 			//printf("ca passe\n");
-			for(int n = 0; n < c->n; n++)
-				poids[n] += ti * (graphe_degre(temp,n)-2);
+			for(int n = 0; n < c->n; n++){
+                        poids[n] += ti * (graphe_degre(temp,n)-2);
+                        //printf("%d = %d\t",n, poids[n]);
+                  }
 
 			detruire_graphe(temp);
 
@@ -758,11 +764,11 @@ int cycle(Coordonnees c, Graphe g){
 	if(aretes == NULL)
 		printf("fail\n");
 
-	printf("premier alloc?\n");
+	//printf("premier alloc?\n");
 
 	int* unionF;
 	unionF = (int*)malloc(nb * sizeof(int));
-	printf("deuxieme alloc?\n");
+	//printf("deuxieme alloc?\n");
 
 
 	for(int i = 0 ; i < nb ; i++)
@@ -776,13 +782,13 @@ int cycle(Coordonnees c, Graphe g){
 			k++;
 		}
 	}
-	printf("créations aretes?\n");
+	//printf("créations aretes?\n");
 	if(nb > 150)
 		fusion_para(aretes,0,nbtot);
 	else
 		tri_selec(aretes,nbtot);
 
-	printf("fusion?\n");
+	//printf("fusion?\n");
 
 	int compt=nb-1;
 	int iter=0;
@@ -807,7 +813,7 @@ int cycle(Coordonnees c, Graphe g){
 		}
 		iter++;
 	}
-	printf("while?\n");
+	//printf("while?\n");
 
 	int sa = -1;
 	int sb = -1;
@@ -955,13 +961,17 @@ int lissage(Graphe g, Coordonnees c){
 	int temp;
 	int res = 0;
 
+      int stop = 0;
+      int stopp;
+
 	while(s2 != 0){
 		s3 = arete_suivante(g, s1, s2);
 		s4 = arete_suivante(g, s2, s3);
 		s5 = arete_suivante(g, s3, s4);
 		while(s5 != 0){
 			if(distance(s1,s2,c) + distance(s3,s4,c) + distance(s4,s5,c)
-			 > distance(s1,s4,c) + distance(s4,s2,c) + distance(s3,s5,c)){
+			 > distance(s1,s4,c) + distance(s4,s2,c) + distance(s3,s5,c)
+                   && s1 != s3 && s1 != s4 && s1 != s5 && s2 != s3 && s2 != s4 && s2 != s5){
 
 				graphe_retirer_arete(g ,s1 ,s2);
 				graphe_retirer_arete(g ,s3 ,s4);
@@ -969,25 +979,56 @@ int lissage(Graphe g, Coordonnees c){
 				graphe_ajouter_arete(g ,s1 ,s4);
 				graphe_ajouter_arete(g ,s4 ,s2);
 				graphe_ajouter_arete(g ,s3 ,s5);
+                        //printf("%d %d %d %d %d \n",s1,s2,s3,s4,s5);
 
-				printf("%d %d %d %d %d \n",s1,s2,s3,s4,s5);
+				//printf("swap");
 				res = 1;
 				s2 = s4;
-				s4 = s5;
-				s5 = arete_suivante(g,s3,s4);
+				s4 = s3;
+				s3 = arete_suivante(g,s5,s4);
+                        //scanf("%d\n",&stopp);
+                        //stop = 1;
 
 			 }
-				printf("%d %d %d %d %d \n",s1,s2,s3,s4,s5);
+			//printf("%d %d %d %d %d \n",s1,s2,s3,s4,s5);
+                  /*
+                  if(stop){
+                        scanf("%d\n",&stopp);
+                        printf("%d\n",stopp);
+                  }
+                  */
 			temp = s5;
 			s5 = arete_suivante(g, s4, s5);
 			s4 = temp;
 			s3 = arete_suivante(g, s5, s4);
 
 		}
+
 		temp = s2;
 		s2 = arete_suivante(g, s1, s2);
 		s1 = temp;
 	}
 	return res;
 
+}
+
+int longueur_cycle(Graphe g, Coordonnees c){
+
+      int s1 = 0;
+      int s2 = g -> alist[s1] -> list[0];
+
+      int res = 0;
+      int temp;
+
+      do{
+            res += distance(s1,s2,c);
+
+            temp = s2;
+		s2 = arete_suivante(g, s1, s2);
+		s1 = temp;
+
+      }while(s1 != 0);
+
+
+      return res;
 }
