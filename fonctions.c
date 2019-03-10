@@ -486,24 +486,13 @@ void prim(Coordonnees c, Graphe g){
 
 	tare.indices[0] = -1;
 
-	//printf("etape 1 check\n %d\n", c ->n);
-
 	for(int i = 1; i < c -> n ; i++){
-		//printf("%d   ",i);
-		//printf("%d\n",distance(0,i,c));
+
 		ajouter(&tare,0,i,distance(0,i,c));
 	}
 
-	//printf("etape 2 check\n");
-	//int j = 0;
-
-	//printf("restant %d\n",tare.pile[0].l);
-
-
-	//while(!est_vide(tare)){
 	while(tare.pile[0].l > 0){
-		//j++;
-		//printf("%d fois\n",j);
+
 
 		int s1 = tare.pile[1].s1;
 		int s2 = tare.pile[1].s2;
@@ -512,11 +501,11 @@ void prim(Coordonnees c, Graphe g){
 		recupMin(&tare);
 		tare.indices[s2] = -1;
 
-		//printf("restant %d\n",tare.pile[0].l);
+
 		for(int i = 1; i < c -> n; i++){
 			int dist = distance(s2,i,c);
-			if(/*!est_vide(tare) &&*/ (tare.indices[i] != -1) && (dist < tare.pile[tare.indices[i]].l) ){
-				//printf("ca rentre\n");
+			if((tare.indices[i] != -1) && (dist < tare.pile[tare.indices[i]].l) ){
+
 				supprime(&tare, i);
 				ajouter(&tare, s2, i, dist);
 			}
@@ -613,15 +602,14 @@ int primPoids(Coordonnees c, Graphe g,float* poids){
 
 		graphe_ajouter_arete(g,s1,s2);
 		res += distance(s1,s2,c) + poids[s1] + poids[s2];
-            //printf("%d   ",res);
-            //printf("%f %f\t",poids[s1],poids[s2]);
+
 		recupMin(&tare);
 		tare.indices[s2] = -1;
 
 		for(int i = 1; i < c -> n; i++){
 			int prio = distance(s2,i,c) + poids[s2] + poids[i];
 			if((tare.indices[i] != -1) && (prio < tare.pile[tare.indices[i]].l) ){
-				//printf("ca rentre\n");
+
 				supprime(&tare, i);
 				ajouter(&tare, s2, i,prio );
 			}
@@ -664,7 +652,7 @@ int primPoids(Coordonnees c, Graphe g,float* poids){
 	int sommep = 0;
 	for(int i = 0; i < c -> n; i++)
 		sommep += poids[i];
-      //printf("\n");
+
 
 	return res - (2*sommep);
 
@@ -687,17 +675,13 @@ int borneMin(Coordonnees c, Graphe g,float UB){
 	int sommed;
 
 	while(iter > 1){
-		//printf("etpae : %d\n",i);
+
 		i++;
 		for(int j = 0; j < iter; j++){
 
 			Graphe temp = creer_graphe(c -> n);
 
 			bInf = primPoids(c,temp,poids);
-
-			printf("etape int = %d\t   bInf = %d\n",j,bInf);
-
-			//printf("ca passe\n");
 
 			sommep = 0;
 			for(int n = 0; n < c -> n; n++)
@@ -709,18 +693,16 @@ int borneMin(Coordonnees c, Graphe g,float UB){
 			for(int n = 0; n < c->n; n++)
 				sommed += pow(graphe_degre(temp,n) - 2,2);
 
-			//printf("ca passe\n");
+
 			float ti = (lambda * (UB - bInf + sommep)) / sommed;
 
-			//printf("ca passe\n");
+
 			for(int n = 0; n < c->n; n++){
                         poids[n] += ti * (graphe_degre(temp,n)-2);
-                        //printf("%d = %d\t",n, poids[n]);
+
                   }
 
 			detruire_graphe(temp);
-
-			//printf("ca passe\n");
 		}
 
 		iter /= 2;
@@ -764,11 +746,9 @@ int cycle(Coordonnees c, Graphe g){
 	if(aretes == NULL)
 		printf("fail\n");
 
-	//printf("premier alloc?\n");
 
 	int* unionF;
 	unionF = (int*)malloc(nb * sizeof(int));
-	//printf("deuxieme alloc?\n");
 
 
 	for(int i = 0 ; i < nb ; i++)
@@ -782,38 +762,34 @@ int cycle(Coordonnees c, Graphe g){
 			k++;
 		}
 	}
-	//printf("créations aretes?\n");
+
 	if(nb > 150)
 		fusion_para(aretes,0,nbtot);
 	else
 		tri_selec(aretes,nbtot);
 
-	//printf("fusion?\n");
 
 	int compt=nb-1;
 	int iter=0;
 	while(compt > 0){
-		//printf("iter = %d\n",iter);
-		//printf("s1 = %d   s2 = %d   \n",aretes[iter].s1,aretes[iter].s2);
-		//printf("s1 -> d = %d   s2 -> d = %d   \n",g -> alist[aretes[iter].s1] -> d,g -> alist[aretes[iter].s2] -> d);
-		//printf("graph deg: s1 = %d   s2 = %d   \n",graphe_degre(g,aretes[iter].s1),graphe_degre(g,aretes[iter].s2));
+
 		int s1 = aretes[iter].s1;
 		int s2 = aretes[iter].s2;
-		//printf("iter = %d\n",iter);
+
 
 		if( (g -> alist[s1] -> d) < 2
 		&&  (g -> alist[s2] -> d) < 2
 		&& !UFIsConnected(unionF,s1,s2)){
-			//printf("if?\n");
+
 			graphe_ajouter_arete(g,s1,s2);
 			res += distance(s1,s2,c);
 			UFConnect(unionF,s1,s2);
 			compt--;
-			//printf("compt : %d\n",compt);
+
 		}
 		iter++;
 	}
-	//printf("while?\n");
+
 
 	int sa = -1;
 	int sb = -1;
@@ -839,49 +815,8 @@ int arete_suivante(Graphe g,int s1,int s2){
 	}
 }
 
-int opt2(Graphe g,Coordonnees c){
-	int n= c -> n;
-	int s1 = 0;
-	int s2 = g -> alist[s1] -> list[0];
-	int s3;
-	int s4;
-	int temp;
-	int res = 0;
 
-	for(int i = 0; i < n-3; i++){
-		//printf("\ns1 s2 : [%d,%d]\n\n",s1,s2);
-		s3 = arete_suivante(g, s1, s2);
-		s4 = arete_suivante(g, s2, s3);
-		for(int j = i+2; j < n -1; j++){
-			//printf("s3 s4 : [%d,%d]\n",s3,s4);
-			if(distance(s1, s2, c) + distance(s3, s4, c)
-			 > distance(s1, s3, c) + distance(s2 ,s4, c)){
-
-				graphe_retirer_arete(g ,s1 ,s2);
-				graphe_retirer_arete(g ,s3 ,s4);
-				graphe_ajouter_arete(g ,s1 ,s3);
-				graphe_ajouter_arete(g ,s2 ,s4);
-			 	//printf("swap\n");
-				temp = s2;
-				s2 = s3;
-				s3 = temp;
-				res = 1;
-			}
-
-			temp = s4;
-			s4 = arete_suivante(g, s3, s4);
-			s3=temp;
-		}
-
-		temp = s2;
-		s2 = arete_suivante(g, s1, s2);
-		s1 = temp;
-	}
-	return res;
-}
-
-
-int opt2bis(Graphe g, Coordonnees c){
+int opt2(Graphe g, Coordonnees c){
 
 	int s1 = 0;
 	int s2 = g -> alist[s1] -> list[0];
@@ -894,7 +829,7 @@ int opt2bis(Graphe g, Coordonnees c){
 		s3 = arete_suivante(g, s1, s2);
 		s4 = arete_suivante(g, s2, s3);
 		while(s3 != 0){
-			//if(intersection2(s1,s2,s3,s4,c)){
+
 			if(distance(s1, s2, c) + distance(s3, s4, c)
 			 > distance(s1, s3, c) + distance(s2 ,s4, c)){
 
@@ -902,7 +837,7 @@ int opt2bis(Graphe g, Coordonnees c){
 				graphe_retirer_arete(g ,s3 ,s4);
 				graphe_ajouter_arete(g ,s1 ,s3);
 				graphe_ajouter_arete(g ,s2 ,s4);
-			 	//printf("swap\n");
+			 	
 				temp = s2;
 				s2 = s3;
 				s3 = temp;
@@ -922,35 +857,6 @@ int opt2bis(Graphe g, Coordonnees c){
 }
 
 
-int intersection2(int a, int b, int x, int y, Coordonnees c){
-	double px = c -> clist[a] -> coordx;
-	double py = c -> clist[a] -> coordy;
-	double qx = c -> clist[x] -> coordx;
-	double qy = c -> clist[x] -> coordy;
-
-	double rx = c -> clist[b] -> coordx - px;
-	double ry = c -> clist[b] -> coordy - py;
-	double sx = c -> clist[y] -> coordx - qx;
-	double sy = c -> clist[y] -> coordy - qy;
-
-	double rTs = prodSca(rx,ry,sx,sy);
-	if(rTs == 0)
-		return 0;
-
-	double t = prodSca(qx - px,qy - py,sx,sy) / rTs;
-	double u = prodSca(px - qx,py - qy,rx,ry) /  (-rTs);
-
-	if( (0 < t) && ( t < 1) && ( 0 < u) && ( u < 1))
-		return 1;
-	return 0;
-
-}
-
-double prodSca(double ux, double uy, double vx, double vy){
-
-	return ( ux * vy ) - ( uy * vx);
-}
-
 int lissage(Graphe g, Coordonnees c){
 
 	int s1 = 0;
@@ -961,8 +867,6 @@ int lissage(Graphe g, Coordonnees c){
 	int temp;
 	int res = 0;
 
-      int stop = 0;
-      int stopp;
 
 	while(s2 != 0){
 		s3 = arete_suivante(g, s1, s2);
@@ -979,24 +883,15 @@ int lissage(Graphe g, Coordonnees c){
 				graphe_ajouter_arete(g ,s1 ,s4);
 				graphe_ajouter_arete(g ,s4 ,s2);
 				graphe_ajouter_arete(g ,s3 ,s5);
-                        //printf("%d %d %d %d %d \n",s1,s2,s3,s4,s5);
 
-				//printf("swap");
 				res = 1;
 				s2 = s4;
 				s4 = s3;
 				s3 = arete_suivante(g,s5,s4);
-                        //scanf("%d\n",&stopp);
-                        //stop = 1;
+
 
 			 }
-			//printf("%d %d %d %d %d \n",s1,s2,s3,s4,s5);
-                  /*
-                  if(stop){
-                        scanf("%d\n",&stopp);
-                        printf("%d\n",stopp);
-                  }
-                  */
+
 			temp = s5;
 			s5 = arete_suivante(g, s4, s5);
 			s4 = temp;

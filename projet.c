@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <time.h>
 #include "fonctions.h"
 #include "tas.h"
 
@@ -63,11 +64,15 @@ int main(int argc, char *argv[])
 	*/
 	//arbre1(c,g);
 
+	clock_t temps_initial = clock();
 
+	printf("borne min = %d\n",borneMin(c,g,50778));
 
-	//printf("borne min = %d\n",borneMin(c,g,7542));
+	clock_t temps_final = clock();
 
+	printf("temps = %ld\n", (temps_final - temps_initial)/CLOCKS_PER_SEC);
 
+	/*
 
 	printf("longueur = %d\n",cycle(c,g));
 
@@ -90,7 +95,7 @@ int main(int argc, char *argv[])
 
 	printf("longueur = %d\n",longueur_cycle(g,c));
 
-
+	*/
 
 
 

@@ -99,8 +99,6 @@ void arbre1(Coordonnees c, Graphe g);
 
 int primPoids(Coordonnees c, Graphe g,float* poids);
 
-int primPoidsNoG(Coordonnees c,float* poids);
-
 int borneMin(Coordonnees c, Graphe g,float UB);
 
 int UFGetRoot(int* tab, int s);
@@ -113,13 +111,7 @@ int cycle(Coordonnees c, Graphe g);
 
 int opt2(Graphe g,Coordonnees c);
 
-int opt2bis(Graphe g,Coordonnees c);
-
 int arete_suivante(Graphe g,int s1,int s2);
-
-int intersection2(int a, int b, int x, int y, Coordonnees c);
-
-double prodSca(double ux, double uy, double vx, double vy);
 
 int lissage(Graphe g, Coordonnees c);
 
